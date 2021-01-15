@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<string> checkHorizontal(vector<string> puzzle,int x,int y,string currentWord)
+{
+    for(int i=0;i<currentWord.size();i++)
+    {
+        if(puzzle[x][y+i] == '-' || puzzle[x][y+i] == currentWord[i])
+        {
+            puzzle[x][y+i] = currentWord[i];
+        }
+        else
+        {
+            puzzle[0][0] = 'f';
+            return puzzle;
+        }
+    }
+    return puzzle;
+}
+vector<string> checkVertical(vector<string> puzzle,int x,int y,string currentWord)
+{
+    for(int i=0;i<currentWord.size();i++)
+    {
+        if(puzzle[x+i][y] == '-' || puzzle[x+i][y] == currentWord[i])
+        {
+            puzzle[x+i][y] = currentWord[i];
+        }
+        else
+        {
+            puzzle[0][0] = 'f';
+            return puzzle;
+        }
+    }
+    return puzzle;
+}
+void crosswordSolve(vector<string> puzzle,vector<string> words,int index,int n)
+{
+    int length = (words[index]).size();
+    int maxLen = n - length;
+    
+        
+    if(index<words.size())
+    {
+    	for(int i=0;i<n;i++)
+    	{
+        	for(int j=0;j<maxLen+1;j++)
+        	{
+                vector<string> puzzle2 = checkHorizontal(puzzle,i,j,words[index]);
+            	if(puzzle2[0][0] != 'f')
+                {
+                    crosswordSolve(puzzle2,words,index+1,n);
+                }
+        	}
+    	} 
+    	for(int i=0;i<n;i++)
+    	{
+        	for(int j=0;j<maxLen+1;j++)
+        	{
+            	vector<string> puzzle2 = checkVertical(puzzle,j,i,words[index]);
+            	if(puzzle2[0][0] != 'f')
+                {
+                    crosswordSolve(puzzle2,words,index+1,n);
+                }
+        	}
+    	}
+    
+    }
+    else
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                cout<<puzzle[i][j];
+            }
+            cout<<endl;
+        }
+        return;
+    }
+    
+    
+}
+int main()
+{
+    vector<string> puzzle;
+    for(int i=0;i<10;i++)
+    {
+        string s;
+        cin>>s;
+        puzzle.push_back(s);
+    }
+    string words,tempString;
+    vector<string> wordsR;
+    cin>>words;
+    for(int i=0;i<words.size();i++)
+    {
+        if(words[i] != ';')
+        {
+            tempString.push_back(words[i]);
+        }
+        else
+        {
+            wordsR.push_back(tempString);
+            tempString = "";
+        }
+    }
+    wordsR.push_back(tempString);
+    crosswordSolve(puzzle,wordsR,0,10);
+    
+}
